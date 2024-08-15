@@ -46,6 +46,7 @@ public class ProgramWindow extends Application {
 	static boolean paused=false;
 	static Random random=new Random();
 	static EventHandler<ActionEvent> eh2;
+	
 	public static void formHead()
 	{
 		snakeParts.clear();
@@ -59,7 +60,7 @@ public class ProgramWindow extends Application {
 		pane.getChildren().add(part);
 	}
 	
-	public void passWalls() 
+	public static void passWalls() 
 	{
 		if(snakeParts.get(0).getLayoutX()<=0) 
 		{
@@ -90,7 +91,7 @@ public class ProgramWindow extends Application {
 		}
 		else {}
 	}
-	public void moveHead() 
+	public static void moveHead() 
 	{
 
 		if(snakeParts.get(0).getDirection().equals("UP")) 
@@ -113,7 +114,7 @@ public class ProgramWindow extends Application {
 
 		else {}
 	}
-	public void putApple()
+	public static void putApple()
 	{	
 		
 		apple=new Part();
@@ -138,7 +139,7 @@ public class ProgramWindow extends Application {
 		 pane.getChildren().add(apple);
 		
 	}
-	public void appleControl()
+	public static void appleControl()
 	{
 		
 		if((snakeParts.get(0).getLayoutX()> apple.getLayoutX()-partSize 
@@ -149,15 +150,16 @@ public class ProgramWindow extends Application {
 			pane.getChildren().remove(apple);
 			score++;
 			length++;
+			formParts();
 			putApple();
-			if(speed>1) 
-			{
-				speed-=1;
+//			if(speed>1) 
+//			{
+//				speed-=1;
 //				timeline=new Timeline(new KeyFrame(Duration.millis((long)speed),eh2));
 //				timeline.setCycleCount(Timeline.INDEFINITE);
 //				timeline.play();
-				
-			}
+//				
+//			}
 			
 			
 			
@@ -168,9 +170,8 @@ public class ProgramWindow extends Application {
 
 	}
 	
-	public void formParts() 
+	public static void formParts() 
 	{
-		
 		
 		for(int i=snakeParts.size(); i<length;i++) 
 		{
@@ -181,7 +182,10 @@ public class ProgramWindow extends Application {
 			snakeParts.add(part);
 			
 		}
-
+	}
+	
+	public static void moveParts()
+	{
 		for(int i=length-1; i>0 ;i--) 
 		{
 			snakeParts.get(i).setDirection(snakeParts.get(i-1).getDirection());
@@ -190,11 +194,8 @@ public class ProgramWindow extends Application {
 		}
 			if(!pane.getChildren().contains(snakeParts.size()-1))
 			pane.getChildren().add(snakeParts.get(snakeParts.size()-1));
-		
-		
-
 	}
-	public void eatItselfControl()
+	public static void eatItselfControl()
 	{
 		for(int i=3; i<length;i++)
 		{
@@ -337,7 +338,7 @@ public class ProgramWindow extends Application {
 						passWalls();
 						moveHead();
 						appleControl();
-						formParts();
+						moveParts();
 						
 						showPoint();
 						

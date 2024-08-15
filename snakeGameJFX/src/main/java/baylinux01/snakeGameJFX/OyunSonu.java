@@ -3,11 +3,13 @@ package baylinux01.snakeGameJFX;
 import javafx.application.Application;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public class OyunSonu extends Application {
@@ -52,6 +54,7 @@ public class OyunSonu extends Application {
 			labelScore.setLayoutX(50);
 			labelScore.setLayoutY(10);
 			labelScore.setStyle("-fx-text-fill:blue;-fx-font-size:40;-fx-border-color:blue;");
+			labelScore.setAlignment(Pos.BASELINE_CENTER);
 			root.getChildren().add(labelScore);
 			
 			Button button=new Button("Yeni Oyun");

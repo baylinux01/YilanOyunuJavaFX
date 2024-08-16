@@ -25,6 +25,9 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -36,11 +39,13 @@ public class ProgramWindow extends Application {
 	static List<Part> snakeParts=new ArrayList<Part>();
 	static int length=2;
 	static boolean gameOver=false;
+	static Rectangle clip;
 	static Pane pane;
 	static Timer timer;
 	static int speed=70;
 	static int score=0;
-	static Part apple;
+	//static Part apple;
+	static Circle apple;
 	static Label labelPause,labelScore;
 	static Timeline timeline;
 	static boolean paused=false;
@@ -62,7 +67,7 @@ public class ProgramWindow extends Application {
 	
 	public static void passWalls() 
 	{
-		if(snakeParts.get(0).getLayoutX()<=0) 
+		if(snakeParts.get(0).getLayoutX()<0) 
 		{
 			snakeParts.get(0).setLayoutX(fieldSize-partSize);
 			snakeParts.get(0).setLayoutY(snakeParts.get(0).getLayoutY());
@@ -75,7 +80,7 @@ public class ProgramWindow extends Application {
 			
 			
 		}
-		else if(snakeParts.get(0).getLayoutY()<=0) 
+		else if(snakeParts.get(0).getLayoutY()<0) 
 		{
 			snakeParts.get(0).setLayoutX(snakeParts.get(0).getLayoutX());
 			snakeParts.get(0).setLayoutY(fieldSize-partSize);
@@ -117,18 +122,20 @@ public class ProgramWindow extends Application {
 	public static void putApple()
 	{	
 		
-		apple=new Part();
+		apple=new Circle(partSize/2,Color.RED);
 		apple.setStyle("-fx-background-color:red;");
-		apple.setPrefWidth(partSize);
-		apple.setPrefHeight(partSize);
+		//apple.setPrefWidth(partSize);
+		//apple.setPrefHeight(partSize);
 		apple.setLayoutX(random.nextInt((fieldSize-partSize)/partSize)*partSize);
 		apple.setLayoutY(random.nextInt((fieldSize-partSize)/partSize)*partSize);
 		for(int i=0;i<snakeParts.size();i++)
 		{
-			if((snakeParts.get(i).getLayoutX()>= apple.getLayoutX()-partSize 
-					&& snakeParts.get(i).getLayoutX()<= apple.getLayoutX()+partSize)
-					&& (snakeParts.get(i).getLayoutY()<=apple.getLayoutY()+partSize 
-				    && snakeParts.get(i).getLayoutY()>=apple.getLayoutY()-partSize))
+			if((snakeParts.get(i).getLayoutX()>= apple.getLayoutX()-partSize
+					&& snakeParts.get(i).getLayoutX()<= apple.getLayoutX()+partSize*0.5)
+					&& (snakeParts.get(i).getLayoutY()<=apple.getLayoutY()+partSize*0.5
+				    && snakeParts.get(i).getLayoutY()>=apple.getLayoutY()-partSize)
+					||apple.getLayoutX()<partSize||apple.getLayoutX()>fieldSize-partSize
+					||apple.getLayoutY()<partSize||apple.getLayoutY()>fieldSize-partSize)
 			{
 				
 				putApple();
@@ -142,10 +149,10 @@ public class ProgramWindow extends Application {
 	public static void appleControl()
 	{
 		
-		if((snakeParts.get(0).getLayoutX()> apple.getLayoutX()-partSize 
-				&& snakeParts.get(0).getLayoutX()< apple.getLayoutX()+partSize)
-				&& (snakeParts.get(0).getLayoutY()<apple.getLayoutY()+partSize 
-			    && snakeParts.get(0).getLayoutY()>apple.getLayoutY()-partSize)) 
+		if((snakeParts.get(0).getLayoutX()>= apple.getLayoutX()-partSize 
+				&& snakeParts.get(0).getLayoutX()<= apple.getLayoutX()+partSize*0.5)
+				&& (snakeParts.get(0).getLayoutY()<=apple.getLayoutY()+partSize*0.5 
+			    && snakeParts.get(0).getLayoutY()>=apple.getLayoutY()-partSize)) 
 		{
 			pane.getChildren().remove(apple);
 			score++;
@@ -248,13 +255,20 @@ public class ProgramWindow extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 			
+			
 			pane=new Pane();
 			pane.setPrefWidth(fieldSize);
 			pane.setPrefHeight(fieldSize);
 			pane.setLayoutX(10);
 			pane.setLayoutY(10);
-			pane.setStyle("-fx-border-color:blue;");
+			pane.setStyle("-fx-background-color:blue;");
 			root.getChildren().add(pane);
+			
+			clip=new Rectangle(fieldSize,fieldSize);
+			clip.setLayoutX(10);
+			clip.setLayoutY(10);
+			clip.setStyle("-fx-border-color:blue;");
+			pane.setClip(clip);
 			
 			
 			labelPause=new Label("PAUSED");
@@ -262,7 +276,7 @@ public class ProgramWindow extends Application {
 			labelPause.setPrefHeight(100);
 			labelPause.setLayoutX(240);
 			labelPause.setLayoutY(240);
-			labelPause.setStyle("-fx-text-fill:blue;-fx-font-size:40;");
+			labelPause.setStyle("-fx-text-fill:red;-fx-font-size:40;");
 			labelPause.setVisible(false);
 			root.getChildren().add(labelPause);
 			
